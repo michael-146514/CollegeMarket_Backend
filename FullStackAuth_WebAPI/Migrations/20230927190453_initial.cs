@@ -61,6 +61,24 @@ namespace FullStackAuth_WebAPI.Migrations
                 .Annotation("MySQL:Charset", "utf8mb4");
 
             migrationBuilder.CreateTable(
+                name: "Messages",
+                columns: table => new
+                {
+                    id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("MySQL:ValueGenerationStrategy", MySQLValueGenerationStrategy.IdentityColumn),
+                    UserIdSender = table.Column<string>(type: "longtext", nullable: true),
+                    UserIdReceiver = table.Column<string>(type: "longtext", nullable: true),
+                    Name = table.Column<string>(type: "longtext", nullable: true),
+                    Message = table.Column<string>(type: "longtext", nullable: true),
+                    Time = table.Column<DateTime>(type: "datetime(6)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Messages", x => x.id);
+                })
+                .Annotation("MySQL:Charset", "utf8mb4");
+
+            migrationBuilder.CreateTable(
                 name: "AspNetRoleClaims",
                 columns: table => new
                 {
@@ -171,13 +189,44 @@ namespace FullStackAuth_WebAPI.Migrations
                 })
                 .Annotation("MySQL:Charset", "utf8mb4");
 
+            migrationBuilder.CreateTable(
+                name: "Products",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("MySQL:ValueGenerationStrategy", MySQLValueGenerationStrategy.IdentityColumn),
+                    Title = table.Column<string>(type: "longtext", nullable: false),
+                    Description = table.Column<string>(type: "longtext", nullable: false),
+                    Price = table.Column<double>(type: "double", nullable: false),
+                    Condition = table.Column<string>(type: "longtext", nullable: true),
+                    Category = table.Column<string>(type: "longtext", nullable: false),
+                    Zipcode = table.Column<int>(type: "int", nullable: false),
+                    ImageUrl_one = table.Column<string>(type: "longtext", nullable: false),
+                    ImageUrl_Two = table.Column<string>(type: "longtext", nullable: true),
+                    ImageUrl_Three = table.Column<string>(type: "longtext", nullable: true),
+                    ImageUrl_Four = table.Column<string>(type: "longtext", nullable: true),
+                    IsActive = table.Column<bool>(type: "tinyint(1)", nullable: false),
+                    Status = table.Column<string>(type: "longtext", nullable: true),
+                    UserId = table.Column<string>(type: "varchar(255)", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Products", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Products_AspNetUsers_UserId",
+                        column: x => x.UserId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id");
+                })
+                .Annotation("MySQL:Charset", "utf8mb4");
+
             migrationBuilder.InsertData(
                 table: "AspNetRoles",
                 columns: new[] { "Id", "ConcurrencyStamp", "Name", "NormalizedName" },
                 values: new object[,]
                 {
-                    { "a3c5d833-cd6f-48da-9588-00ee8fcd40db", null, "Admin", "ADMIN" },
-                    { "d4f9f9a8-f04f-4ae5-a77a-4a12b16ca613", null, "User", "USER" }
+                    { "59adaad8-00a4-4c3b-8240-bc4de681ae95", null, "User", "USER" },
+                    { "9150f62e-9c9c-4567-a711-8d344733c3a0", null, "Admin", "ADMIN" }
                 });
 
             migrationBuilder.CreateIndex(
@@ -216,6 +265,11 @@ namespace FullStackAuth_WebAPI.Migrations
                 table: "AspNetUsers",
                 column: "NormalizedUserName",
                 unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Products_UserId",
+                table: "Products",
+                column: "UserId");
         }
 
         /// <inheritdoc />
@@ -235,6 +289,12 @@ namespace FullStackAuth_WebAPI.Migrations
 
             migrationBuilder.DropTable(
                 name: "AspNetUserTokens");
+
+            migrationBuilder.DropTable(
+                name: "Messages");
+
+            migrationBuilder.DropTable(
+                name: "Products");
 
             migrationBuilder.DropTable(
                 name: "AspNetRoles");

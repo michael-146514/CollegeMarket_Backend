@@ -18,10 +18,15 @@ namespace FullStackAuth_WebAPI.Models
         [Required]
         public string Category { get; set; }
         [Required]
+        public int Zipcode { get; set; }
+        [Required]
         public string ImageUrl_one { get; set; }
         public string ImageUrl_Two { get; set; }
         public string ImageUrl_Three { get; set; }
         public string ImageUrl_Four { get; set; }
+
+        public bool IsActive { get; set; }
+        public string Status { get; set; }
 
         [ForeignKey("User")]
         public string UserId { get; set; }

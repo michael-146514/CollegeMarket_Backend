@@ -11,7 +11,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace FullStackAuth_WebAPI.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20230923193206_initial")]
+    [Migration("20230927190453_initial")]
     partial class initial
     {
         /// <inheritdoc />
@@ -21,6 +21,88 @@ namespace FullStackAuth_WebAPI.Migrations
             modelBuilder
                 .HasAnnotation("ProductVersion", "7.0.7")
                 .HasAnnotation("Relational:MaxIdentifierLength", 64);
+
+            modelBuilder.Entity("FullStackAuth_WebAPI.Models.Messages", b =>
+                {
+                    b.Property<int>("id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    b.Property<string>("Message")
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("longtext");
+
+                    b.Property<DateTime>("Time")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<string>("UserIdReceiver")
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("UserIdSender")
+                        .HasColumnType("longtext");
+
+                    b.HasKey("id");
+
+                    b.ToTable("Messages");
+                });
+
+            modelBuilder.Entity("FullStackAuth_WebAPI.Models.Product", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    b.Property<string>("Category")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("Condition")
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("ImageUrl_Four")
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("ImageUrl_Three")
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("ImageUrl_Two")
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("ImageUrl_one")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("tinyint(1)");
+
+                    b.Property<double>("Price")
+                        .HasColumnType("double");
+
+                    b.Property<string>("Status")
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("Title")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("UserId")
+                        .HasColumnType("varchar(255)");
+
+                    b.Property<int>("Zipcode")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("Products");
+                });
 
             modelBuilder.Entity("FullStackAuth_WebAPI.Models.User", b =>
                 {
@@ -120,13 +202,13 @@ namespace FullStackAuth_WebAPI.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "d4f9f9a8-f04f-4ae5-a77a-4a12b16ca613",
+                            Id = "59adaad8-00a4-4c3b-8240-bc4de681ae95",
                             Name = "User",
                             NormalizedName = "USER"
                         },
                         new
                         {
-                            Id = "a3c5d833-cd6f-48da-9588-00ee8fcd40db",
+                            Id = "9150f62e-9c9c-4567-a711-8d344733c3a0",
                             Name = "Admin",
                             NormalizedName = "ADMIN"
                         });
@@ -232,6 +314,15 @@ namespace FullStackAuth_WebAPI.Migrations
                     b.HasKey("UserId", "LoginProvider", "Name");
 
                     b.ToTable("AspNetUserTokens", (string)null);
+                });
+
+            modelBuilder.Entity("FullStackAuth_WebAPI.Models.Product", b =>
+                {
+                    b.HasOne("FullStackAuth_WebAPI.Models.User", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId");
+
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
