@@ -72,7 +72,6 @@ namespace FullStackAuth_WebAPI.Controllers
             }
             catch (Exception ex)
             {
-
                 return StatusCode(500, ex.Message);
             }
         }
