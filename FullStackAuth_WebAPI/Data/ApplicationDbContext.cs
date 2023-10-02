@@ -16,6 +16,8 @@ namespace FullStackAuth_WebAPI.Data
 
         public DbSet<UserConversation> UserConversations { get; set; }
 
+        public DbSet<Image> Image { get; set; }
+
 
 
 
