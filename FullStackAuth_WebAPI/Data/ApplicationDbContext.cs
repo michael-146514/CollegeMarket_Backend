@@ -12,7 +12,12 @@ namespace FullStackAuth_WebAPI.Data
 
         public DbSet<Messages> Messages { get; set; }
 
-        
+        public DbSet<Conversation> Conversations { get; set; }
+
+        public DbSet<UserConversation> UserConversations { get; set; }
+
+
+
 
         public ApplicationDbContext(DbContextOptions options)
     : base(options)

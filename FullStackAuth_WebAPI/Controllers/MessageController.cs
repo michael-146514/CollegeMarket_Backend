@@ -1,43 +1,130 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using FullStackAuth_WebAPI.Data;
+using FullStackAuth_WebAPI.Models;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
 namespace FullStackAuth_WebAPI.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/messages")]
     [ApiController]
+    [Authorize]
     public class MessageController : ControllerBase
     {
-        // GET: api/<MessageController>
+
+        private readonly ApplicationDbContext _context;
+
+        public MessageController(ApplicationDbContext context)
+        {
+            _context = context;
+        }
+
+        // GET: api/messages
         [HttpGet]
-        public IEnumerable<string> Get()
+        public IActionResult GetMessages()
         {
-            return new string[] { "value1", "value2" };
+            try
+            {
+                var messages = _context.Messages.ToList();
+                return Ok(messages);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, ex.Message);
+            }
         }
 
-        // GET api/<MessageController>/5
+        // GET: api/messages/{id}
         [HttpGet("{id}")]
-        public string Get(int id)
+        public IActionResult GetMessage(int id)
         {
-            return "value";
+            try
+            {
+                var message = _context.Messages.Find(id);
+
+                if (message == null)
+                {
+                    return NotFound();
+                }
+
+                return Ok(message);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, ex.Message);
+            }
         }
 
-        // POST api/<MessageController>
+        // POST: api/messages
         [HttpPost]
-        public void Post([FromBody] string value)
+        public IActionResult CreateMessage([FromBody] Messages message)
         {
+            try
+            {
+                message.Timestamp = DateTime.UtcNow;
+
+                _context.Messages.Add(message);
+                _context.SaveChanges();
+
+                return CreatedAtAction(nameof(GetMessage), new { id = message.Id }, message);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, ex.Message);
+            }
         }
 
-        // PUT api/<MessageController>/5
+        // PUT: api/messages/{id}
         [HttpPut("{id}")]
-        public void Put(int id, [FromBody] string value)
+        public IActionResult UpdateMessage(int id, [FromBody] Messages message)
         {
+            if (id != message.Id)
+            {
+                return BadRequest();
+            }
+
+            _context.Entry(message).State = EntityState.Modified;
+
+            try
+            {
+                _context.SaveChanges();
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                if (!MessageExists(id))
+                {
+                    return NotFound();
+                }
+                else
+                {
+                    throw;
+                }
+            }
+
+            return NoContent();
         }
 
-        // DELETE api/<MessageController>/5
+        // DELETE: api/messages/{id}
         [HttpDelete("{id}")]
-        public void Delete(int id)
+        public IActionResult DeleteMessage(int id)
         {
+            var message = _context.Messages.Find(id);
+            if (message == null)
+            {
+                return NotFound();
+            }
+
+            _context.Messages.Remove(message);
+            _context.SaveChanges();
+
+            return NoContent();
+        }
+
+        private bool MessageExists(int id)
+        {
+            return _context.Messages.Any(e => e.Id == id);
         }
     }
 }

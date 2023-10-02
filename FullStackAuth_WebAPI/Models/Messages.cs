@@ -6,18 +6,25 @@ namespace FullStackAuth_WebAPI.Models
     public class Messages
     {
         [Key]
-        public int id { get; set; }
+        public int Id { get; set; }
 
-        [ForeignKey("User")]
-        public string UserIdSender { get; set; }
+        [Required]
+        [MaxLength(1000)] 
+        public string Content { get; set; }
 
-        [ForeignKey("User")]
-        public string UserIdReceiver { get; set; }
+        [Required]
+        public int ConversationId { get; set; } 
 
-        public string Name { get; set; }
+        [ForeignKey("ConversationId")]
+        public Conversation Conversation { get; set; } 
 
-        public string Message { get; set; }
+        [Required]
+        public string SenderUserId { get; set; } 
 
-        public DateTime Time { get; set; }
+        [ForeignKey("SenderUserId")]
+        public User SenderUser { get; set; } 
+
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        public DateTime Timestamp { get; set; } 
     }
 }
