@@ -27,14 +27,14 @@ namespace FullStackAuth_WebAPI.Controllers
             {
                 
                 var matchingProducts = _context.Products
-                .Where(p => (p.Title.Contains(query) || p.Description.Contains(query)) || p.Category.Contains(query) && p.Zipcode == zipcode)
+                .Where(p => (p.Title.Contains(query) || p.Description.Contains(query)) || p.Category.Contains(query) && p.Zipcode == zipcode && p.IsActive == true).Include(p => p.ImageUrls)
                .ToList();
 
 
                 if (matchingProducts.Count == 0)
                 {
                     matchingProducts = _context.Products
-                 .Where(p => p.Title.Contains(query) || p.Description.Contains(query) || p.Category.Contains(query))
+                 .Where(p => p.Title.Contains(query) || p.Description.Contains(query) || p.Category.Contains(query) && p.IsActive == true).Include(p => p.ImageUrls)
                     .ToList();
                 }
 
@@ -60,7 +60,7 @@ namespace FullStackAuth_WebAPI.Controllers
             {
                 // Perform a query to filter products by category
                 var productsInCategory = _context.Products
-                    .Where(p => p.Category == category)
+                    .Where(p => p.Category == category && p.IsActive == true).Include(p => p.ImageUrls)
                     .ToList();
 
                 if (productsInCategory.Count == 0)

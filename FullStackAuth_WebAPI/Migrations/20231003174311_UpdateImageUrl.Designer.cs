@@ -11,8 +11,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace FullStackAuth_WebAPI.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20230928215056_initial")]
-    partial class initial
+    [Migration("20231003174311_UpdateImageUrl")]
+    partial class UpdateImageUrl
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -40,6 +40,39 @@ namespace FullStackAuth_WebAPI.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Conversations");
+                });
+
+            modelBuilder.Entity("FullStackAuth_WebAPI.Models.Image", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    b.Property<string>("Description")
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("Title")
+                        .HasColumnType("longtext");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Image");
+                });
+
+            modelBuilder.Entity("FullStackAuth_WebAPI.Models.ImageUrl", b =>
+                {
+                    b.Property<int>("Id")
+                        .HasColumnType("int");
+
+                    b.Property<int>("ProductID")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Url")
+                        .HasColumnType("longtext");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("ImageUrl");
                 });
 
             modelBuilder.Entity("FullStackAuth_WebAPI.Models.Messages", b =>
@@ -84,22 +117,10 @@ namespace FullStackAuth_WebAPI.Migrations
                         .HasColumnType("longtext");
 
                     b.Property<string>("Condition")
-                        .HasColumnType("longtext");
-
-                    b.Property<string>("Description")
                         .IsRequired()
                         .HasColumnType("longtext");
 
-                    b.Property<string>("ImageUrl_Four")
-                        .HasColumnType("longtext");
-
-                    b.Property<string>("ImageUrl_Three")
-                        .HasColumnType("longtext");
-
-                    b.Property<string>("ImageUrl_Two")
-                        .HasColumnType("longtext");
-
-                    b.Property<string>("ImageUrl_one")
+                    b.Property<string>("Description")
                         .IsRequired()
                         .HasColumnType("longtext");
 
@@ -248,13 +269,13 @@ namespace FullStackAuth_WebAPI.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "0b1fe106-f110-40fe-b33a-3a7edc0455fa",
+                            Id = "93064994-4bab-42c5-a586-a0a99951e56d",
                             Name = "User",
                             NormalizedName = "USER"
                         },
                         new
                         {
-                            Id = "d9cf733e-6010-45f4-909c-fdcd51bc3476",
+                            Id = "99511521-7fdc-4061-a247-9adbbdffeeb5",
                             Name = "Admin",
                             NormalizedName = "ADMIN"
                         });
@@ -362,6 +383,15 @@ namespace FullStackAuth_WebAPI.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
+            modelBuilder.Entity("FullStackAuth_WebAPI.Models.ImageUrl", b =>
+                {
+                    b.HasOne("FullStackAuth_WebAPI.Models.Product", null)
+                        .WithMany("ImageUrls")
+                        .HasForeignKey("Id")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
             modelBuilder.Entity("FullStackAuth_WebAPI.Models.Messages", b =>
                 {
                     b.HasOne("FullStackAuth_WebAPI.Models.Conversation", "Conversation")
@@ -463,6 +493,11 @@ namespace FullStackAuth_WebAPI.Migrations
                     b.Navigation("Messages");
 
                     b.Navigation("UserConversations");
+                });
+
+            modelBuilder.Entity("FullStackAuth_WebAPI.Models.Product", b =>
+                {
+                    b.Navigation("ImageUrls");
                 });
 #pragma warning restore 612, 618
         }

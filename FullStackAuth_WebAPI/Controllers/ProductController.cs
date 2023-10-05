@@ -3,6 +3,8 @@ using FullStackAuth_WebAPI.DataTransferObjects;
 using FullStackAuth_WebAPI.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Hosting;
 using System.Net;
 using System.Security.Claims;
 
@@ -16,11 +18,15 @@ namespace FullStackAuth_WebAPI.Controllers
     {
 
         private readonly ApplicationDbContext _context;
+        private readonly IWebHostEnvironment _hostEnvironment;
 
-        public ProductController(ApplicationDbContext context)
+        public ProductController(ApplicationDbContext context, IWebHostEnvironment hostEnvironment)
         {
             _context = context;
+            this._hostEnvironment = hostEnvironment;
         }
+
+
 
 
         // GET api/<ProductController>/5
@@ -29,7 +35,9 @@ namespace FullStackAuth_WebAPI.Controllers
         {
             try
             {
-                var product = _context.Products.Find(Id);
+                var product = _context.Products
+                    .Include(p => p.ImageUrls) // Include the related ImageUrls
+                    .SingleOrDefault(p => p.Id == Id);
 
                 if (product == null)
                 {
@@ -40,14 +48,33 @@ namespace FullStackAuth_WebAPI.Controllers
             }
             catch (Exception ex)
             {
+                return StatusCode(500, ex.Message);
+            }
+        }
 
+        [HttpGet("user/{userId}")]
+        public IActionResult GetYour(string userId)
+        {
+            try
+            {
+                var product = _context.Products.Where(p => p.UserId == userId).Include(p => p.ImageUrls);
+
+                if (product == null)
+                {
+                    return NotFound();
+                }
+
+                return Ok(product);
+            }
+            catch (Exception ex)
+            {
                 return StatusCode(500, ex.Message);
             }
         }
 
         // POST api/<ProductController>
         [HttpPost, Authorize]
-        public IActionResult Post([FromBody] Product data)
+        public async Task<IActionResult> Post([FromForm] ProductFormData formData)
         {
             try
             {
@@ -58,17 +85,34 @@ namespace FullStackAuth_WebAPI.Controllers
                     return Unauthorized();
                 }
 
-                data.UserId = userId;
-
-                _context.Products.Add(data);
-                if (!ModelState.IsValid)
+                var product = new Product
                 {
-                    return BadRequest(ModelState);
+                    Title = formData.Title,
+                    Description = formData.Description,
+                    Price = formData.Price,
+                    Condition = formData.Condition,
+                    Category = formData.Category,
+                    Zipcode = formData.Zipcode,
+                    IsActive = formData.IsActive, // Assuming IsActive is a property of ProductFormData
+                    Status = formData.Status, // Assuming Status is a property of ProductFormData
+                    UserId = userId,
+                    ImageUrls = new List<ImageUrl>(),
+                };
+
+                // Handle image uploads and save their URLs
+                foreach (var imageFile in formData.Images)
+                {
+                    string imageUrl = await SaveImage(imageFile); // Implement the SaveImage method to save the image and return its URL
+                    var imageUrlEntity = new ImageUrl { Url = imageUrl, ProductID = product.Id }; // Set the ProductID here
+                    product.ImageUrls.Add(imageUrlEntity);
                 }
+
+                product.UserId = userId;
+
+                _context.Products.Add(product);
                 _context.SaveChanges();
 
-                
-                return StatusCode(201, data);
+                return StatusCode(201, product);
             }
             catch (Exception ex)
             {
@@ -149,5 +193,39 @@ namespace FullStackAuth_WebAPI.Controllers
             }
 
         }
+
+
+        [NonAction]
+        public async Task<string> SaveImage(IFormFile imageFile)
+        {
+
+
+            if (imageFile == null || string.IsNullOrEmpty(imageFile.FileName))
+            {
+
+                return "Image file is missing or invalid.";
+            }
+
+            string fileNameWithoutExtension = Path.GetFileNameWithoutExtension(imageFile.FileName);
+
+            if (string.IsNullOrEmpty(fileNameWithoutExtension))
+            {
+
+                return "Image file name is missing or invalid.";
+            }
+
+            string imageName = new String(Path.GetFileNameWithoutExtension(imageFile.FileName).Take(10).ToArray()).Replace(' ', '-');
+            imageName = imageName + DateTime.Now.ToString("yymmssfff") + Path.GetExtension(imageFile.FileName);
+
+            var imagePath = Path.Combine(_hostEnvironment.ContentRootPath, "Images", imageName);
+
+            using (var fileStream = new FileStream(imagePath, FileMode.Create))
+            {
+                await imageFile.CopyToAsync(fileStream);
+            }
+
+            return imageName;
+        }
+
     }
 }

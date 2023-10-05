@@ -2,6 +2,11 @@
 using FullStackAuth_WebAPI.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System.Threading.Tasks;
+using System.IO;
+using Microsoft.Extensions.Hosting;
+using System;
+using Microsoft.AspNetCore.Hosting;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -24,20 +29,49 @@ namespace projectName.Controllers
 
         // GET: api/Image
         // This action method gets all the images from the database.
-        [HttpGet]
-        public async Task<ActionResult<IEnumerable<Image>>> GetAllImages()
+        [HttpGet("{imageName}.{format}")]
+        public async Task<ActionResult<IEnumerable<Image>>> GetImagesByName(string imageName, string format)
         {
-            // Query the Image table and project the result into a new collection of Image.
-            // For each image, the ImageSrc is created by combining the request scheme (http or https),
-            // the host, the base path of the request, and the name of the image.
-            return await _context.Image.Select(x => new Image()
+            try
             {
-                Id = x.Id,
-                Title = x.Title,
-                Description = x.Description,
-                ImageSrc = String.Format("{0}://{1}{2}/Images/{3}", Request.Scheme, Request.Host, Request.PathBase, x.Title)
-            }).ToListAsync();
+                if (string.IsNullOrEmpty(imageName) || string.IsNullOrEmpty(format))
+                {
+                    return BadRequest("Image name or format cannot be empty.");
+                }
+
+                // Check if the format is a valid image format (e.g., png, jpeg, etc.). You can add more valid formats as needed.
+                string[] validFormats = { "png", "jpeg", "jpg", "gif" };
+                if (!validFormats.Contains(format.ToLower()))
+                {
+                    return BadRequest("Invalid image format.");
+                }
+
+                // Combine the image name and format to form the complete file name.
+                string completeImageName = $"{imageName}.{format}";
+
+                // Check if the image file with the complete name exists.
+                string imagePath = Path.Combine(_hostEnvironment.ContentRootPath, "Images", completeImageName);
+                if (!System.IO.File.Exists(imagePath))
+                {
+                    return NotFound("Image not found.");
+                }
+
+                // Create an Image object for the found image.
+                var image = new Image
+                {
+                    Title = completeImageName,
+                    ImageSrc = string.Format("{0}://{1}{2}/Images/{3}", Request.Scheme, Request.Host, Request.PathBase, completeImageName)
+                };
+
+                return Ok(image);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, ex.Message);
+            }
         }
+
+
 
 
         // POST: api/Images

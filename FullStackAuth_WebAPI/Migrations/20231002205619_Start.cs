@@ -9,7 +9,7 @@ using MySql.EntityFrameworkCore.Metadata;
 namespace FullStackAuth_WebAPI.Migrations
 {
     /// <inheritdoc />
-    public partial class initial : Migration
+    public partial class Start : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -73,6 +73,21 @@ namespace FullStackAuth_WebAPI.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Conversations", x => x.Id);
+                })
+                .Annotation("MySQL:Charset", "utf8mb4");
+
+            migrationBuilder.CreateTable(
+                name: "Image",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("MySQL:ValueGenerationStrategy", MySQLValueGenerationStrategy.IdentityColumn),
+                    Title = table.Column<string>(type: "longtext", nullable: true),
+                    Description = table.Column<string>(type: "longtext", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Image", x => x.Id);
                 })
                 .Annotation("MySQL:Charset", "utf8mb4");
 
@@ -196,13 +211,9 @@ namespace FullStackAuth_WebAPI.Migrations
                     Title = table.Column<string>(type: "longtext", nullable: false),
                     Description = table.Column<string>(type: "longtext", nullable: false),
                     Price = table.Column<double>(type: "double", nullable: false),
-                    Condition = table.Column<string>(type: "longtext", nullable: true),
+                    Condition = table.Column<string>(type: "longtext", nullable: false),
                     Category = table.Column<string>(type: "longtext", nullable: false),
                     Zipcode = table.Column<int>(type: "int", nullable: false),
-                    ImageUrl_one = table.Column<string>(type: "longtext", nullable: false),
-                    ImageUrl_Two = table.Column<string>(type: "longtext", nullable: true),
-                    ImageUrl_Three = table.Column<string>(type: "longtext", nullable: true),
-                    ImageUrl_Four = table.Column<string>(type: "longtext", nullable: true),
                     IsActive = table.Column<bool>(type: "tinyint(1)", nullable: false),
                     Status = table.Column<string>(type: "longtext", nullable: true),
                     UserId = table.Column<string>(type: "varchar(255)", nullable: true)
@@ -274,13 +285,32 @@ namespace FullStackAuth_WebAPI.Migrations
                 })
                 .Annotation("MySQL:Charset", "utf8mb4");
 
+            migrationBuilder.CreateTable(
+                name: "ImageUrl",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false),
+                    Url = table.Column<string>(type: "longtext", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ImageUrl", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_ImageUrl_Products_Id",
+                        column: x => x.Id,
+                        principalTable: "Products",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                })
+                .Annotation("MySQL:Charset", "utf8mb4");
+
             migrationBuilder.InsertData(
                 table: "AspNetRoles",
                 columns: new[] { "Id", "ConcurrencyStamp", "Name", "NormalizedName" },
                 values: new object[,]
                 {
-                    { "0b1fe106-f110-40fe-b33a-3a7edc0455fa", null, "User", "USER" },
-                    { "d9cf733e-6010-45f4-909c-fdcd51bc3476", null, "Admin", "ADMIN" }
+                    { "be0ada50-4da1-483d-84b1-7edd9392e0d9", null, "User", "USER" },
+                    { "bfda347f-fd57-4dac-bfde-e4f8f9120b92", null, "Admin", "ADMIN" }
                 });
 
             migrationBuilder.CreateIndex(
@@ -365,10 +395,13 @@ namespace FullStackAuth_WebAPI.Migrations
                 name: "AspNetUserTokens");
 
             migrationBuilder.DropTable(
-                name: "Messages");
+                name: "Image");
 
             migrationBuilder.DropTable(
-                name: "Products");
+                name: "ImageUrl");
+
+            migrationBuilder.DropTable(
+                name: "Messages");
 
             migrationBuilder.DropTable(
                 name: "UserConversations");
@@ -377,10 +410,13 @@ namespace FullStackAuth_WebAPI.Migrations
                 name: "AspNetRoles");
 
             migrationBuilder.DropTable(
-                name: "AspNetUsers");
+                name: "Products");
 
             migrationBuilder.DropTable(
                 name: "Conversations");
+
+            migrationBuilder.DropTable(
+                name: "AspNetUsers");
         }
     }
 }

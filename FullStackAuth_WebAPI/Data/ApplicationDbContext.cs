@@ -32,6 +32,13 @@ namespace FullStackAuth_WebAPI.Data
             base.OnModelCreating(modelBuilder);
 
             modelBuilder.ApplyConfiguration(new RolesConfiguration());
+
+            modelBuilder.Entity<Product>()
+                .HasMany(p => p.ImageUrls)
+                .WithOne()
+                .HasForeignKey(i => i.Id);
         }
+
+       
     }
 }
