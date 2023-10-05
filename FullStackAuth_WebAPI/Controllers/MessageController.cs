@@ -14,117 +14,117 @@ namespace FullStackAuth_WebAPI.Controllers
     public class MessageController : ControllerBase
     {
 
-        private readonly ApplicationDbContext _context;
+        //private readonly ApplicationDbContext _context;
 
-        public MessageController(ApplicationDbContext context)
-        {
-            _context = context;
-        }
+        //public MessageController(ApplicationDbContext context)
+        //{
+        //    _context = context;
+        //}
 
-        // GET: api/messages
-        [HttpGet]
-        public IActionResult GetMessages()
-        {
-            try
-            {
-                var messages = _context.Messages.ToList();
-                return Ok(messages);
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(500, ex.Message);
-            }
-        }
+        //// GET: api/messages
+        //[HttpGet]
+        //public IActionResult GetMessages()
+        //{
+        //    try
+        //    {
+        //        var messages = _context.Messages.ToList();
+        //        return Ok(messages);
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        return StatusCode(500, ex.Message);
+        //    }
+        //}
 
-        // GET: api/messages/{id}
-        [HttpGet("{id}")]
-        public IActionResult GetMessage(int id)
-        {
-            try
-            {
-                var message = _context.Messages.Find(id);
+        //// GET: api/messages/{id}
+        //[HttpGet("{id}")]
+        //public IActionResult GetMessage(int id)
+        //{
+        //    try
+        //    {
+        //        var message = _context.Messages.Find(id);
 
-                if (message == null)
-                {
-                    return NotFound();
-                }
+        //        if (message == null)
+        //        {
+        //            return NotFound();
+        //        }
 
-                return Ok(message);
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(500, ex.Message);
-            }
-        }
+        //        return Ok(message);
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        return StatusCode(500, ex.Message);
+        //    }
+        //}
 
-        // POST: api/messages
-        [HttpPost]
-        public IActionResult CreateMessage([FromBody] Messages message)
-        {
-            try
-            {
-                message.Timestamp = DateTime.UtcNow;
+        //// POST: api/messages
+        //[HttpPost]
+        //public IActionResult CreateMessage([FromBody] Messages message)
+        //{
+        //    try
+        //    {
+        //        message.Timestamp = DateTime.UtcNow;
 
-                _context.Messages.Add(message);
-                _context.SaveChanges();
+        //        _context.Messages.Add(message);
+        //        _context.SaveChanges();
 
-                return CreatedAtAction(nameof(GetMessage), new { id = message.Id }, message);
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(500, ex.Message);
-            }
-        }
+        //        return CreatedAtAction(nameof(GetMessage), new { id = message.Id }, message);
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        return StatusCode(500, ex.Message);
+        //    }
+        //}
 
-        // PUT: api/messages/{id}
-        [HttpPut("{id}")]
-        public IActionResult UpdateMessage(int id, [FromBody] Messages message)
-        {
-            if (id != message.Id)
-            {
-                return BadRequest();
-            }
+        //// PUT: api/messages/{id}
+        //[HttpPut("{id}")]
+        //public IActionResult UpdateMessage(int id, [FromBody] Messages message)
+        //{
+        //    if (id != message.Id)
+        //    {
+        //        return BadRequest();
+        //    }
 
-            _context.Entry(message).State = EntityState.Modified;
+        //    _context.Entry(message).State = EntityState.Modified;
 
-            try
-            {
-                _context.SaveChanges();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!MessageExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
+        //    try
+        //    {
+        //        _context.SaveChanges();
+        //    }
+        //    catch (DbUpdateConcurrencyException)
+        //    {
+        //        if (!MessageExists(id))
+        //        {
+        //            return NotFound();
+        //        }
+        //        else
+        //        {
+        //            throw;
+        //        }
+        //    }
 
-            return NoContent();
-        }
+        //    return NoContent();
+        //}
 
-        // DELETE: api/messages/{id}
-        [HttpDelete("{id}")]
-        public IActionResult DeleteMessage(int id)
-        {
-            var message = _context.Messages.Find(id);
-            if (message == null)
-            {
-                return NotFound();
-            }
+        //// DELETE: api/messages/{id}
+        //[HttpDelete("{id}")]
+        //public IActionResult DeleteMessage(int id)
+        //{
+        //    var message = _context.Messages.Find(id);
+        //    if (message == null)
+        //    {
+        //        return NotFound();
+        //    }
 
-            _context.Messages.Remove(message);
-            _context.SaveChanges();
+        //    _context.Messages.Remove(message);
+        //    _context.SaveChanges();
 
-            return NoContent();
-        }
+        //    return NoContent();
+        //}
 
-        private bool MessageExists(int id)
-        {
-            return _context.Messages.Any(e => e.Id == id);
-        }
+        //private bool MessageExists(int id)
+        //{
+        //    return _context.Messages.Any(e => e.Id == id);
+        //}
     }
 }

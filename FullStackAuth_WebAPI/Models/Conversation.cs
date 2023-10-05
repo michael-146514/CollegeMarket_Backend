@@ -3,32 +3,32 @@ using System.ComponentModel.DataAnnotations;
 
 namespace FullStackAuth_WebAPI.Models
 {
+    
     public class Conversation
     {
         [Key]
         public int Id { get; set; }
 
-        [Required]
-        [MaxLength(1000)]
         public string Title { get; set; }
 
-        public ICollection<UserConversation> UserConversations { get; set; } = new List<UserConversation>();
-   
-        public ICollection<Messages> Messages { get; set; } = new List<Messages>();
+        public string UserOne { get; set; }
 
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public DateTime CreatedAt { get; set; } 
+        public string UserTwo { get; set; }
+
+        public ICollection<Messages> Messages { get; set; } = new List<Messages>();
     }
 
-    public class UserConversation
+    public class CreateConversationRequest
+    {
+        public string Title { get; set; }
+        public List<UserDto> UserIds { get; set; }
+    }
+
+    public class UserDto
     {
         [Key]
         public int Id { get; set; }
-
-        public int ConversationId { get; set; }
-        public Conversation Conversation { get; set; }
-
         public string UserId { get; set; }
-        public User User { get; set; }
     }
+
 }

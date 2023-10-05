@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Text.Json.Serialization;
 
 namespace FullStackAuth_WebAPI.Models
 {
@@ -9,22 +10,17 @@ namespace FullStackAuth_WebAPI.Models
         public int Id { get; set; }
 
         [Required]
-        [MaxLength(1000)] 
         public string Content { get; set; }
 
         [Required]
-        public int ConversationId { get; set; } 
+        public string UserId { get; set; }
 
-        [ForeignKey("ConversationId")]
-        public Conversation Conversation { get; set; } 
+        [ForeignKey("Conversation")]
+        public int ConversationId { get; set; }
 
-        [Required]
-        public string SenderUserId { get; set; } 
+        [JsonIgnore]
+        public Conversation Conversation { get; set; }
 
-        [ForeignKey("SenderUserId")]
-        public User SenderUser { get; set; } 
 
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public DateTime Timestamp { get; set; } 
     }
 }

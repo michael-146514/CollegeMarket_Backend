@@ -9,7 +9,7 @@ using MySql.EntityFrameworkCore.Metadata;
 namespace FullStackAuth_WebAPI.Migrations
 {
     /// <inheritdoc />
-    public partial class Start : Migration
+    public partial class initial : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -66,9 +66,9 @@ namespace FullStackAuth_WebAPI.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("MySQL:ValueGenerationStrategy", MySQLValueGenerationStrategy.IdentityColumn),
-                    Title = table.Column<string>(type: "varchar(1000)", maxLength: 1000, nullable: false),
-                    CreatedAt = table.Column<DateTime>(type: "datetime(6)", nullable: false)
-                        .Annotation("MySQL:ValueGenerationStrategy", MySQLValueGenerationStrategy.IdentityColumn)
+                    Title = table.Column<string>(type: "longtext", nullable: true),
+                    UserOne = table.Column<string>(type: "longtext", nullable: true),
+                    UserTwo = table.Column<string>(type: "longtext", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -235,49 +235,15 @@ namespace FullStackAuth_WebAPI.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("MySQL:ValueGenerationStrategy", MySQLValueGenerationStrategy.IdentityColumn),
-                    Content = table.Column<string>(type: "varchar(1000)", maxLength: 1000, nullable: false),
-                    ConversationId = table.Column<int>(type: "int", nullable: false),
-                    SenderUserId = table.Column<string>(type: "varchar(255)", nullable: false),
-                    Timestamp = table.Column<DateTime>(type: "datetime(6)", nullable: false)
-                        .Annotation("MySQL:ValueGenerationStrategy", MySQLValueGenerationStrategy.IdentityColumn)
+                    Content = table.Column<string>(type: "longtext", nullable: false),
+                    UserId = table.Column<string>(type: "longtext", nullable: false),
+                    ConversationId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Messages", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Messages_AspNetUsers_SenderUserId",
-                        column: x => x.SenderUserId,
-                        principalTable: "AspNetUsers",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
                         name: "FK_Messages_Conversations_ConversationId",
-                        column: x => x.ConversationId,
-                        principalTable: "Conversations",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                })
-                .Annotation("MySQL:Charset", "utf8mb4");
-
-            migrationBuilder.CreateTable(
-                name: "UserConversations",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("MySQL:ValueGenerationStrategy", MySQLValueGenerationStrategy.IdentityColumn),
-                    ConversationId = table.Column<int>(type: "int", nullable: false),
-                    UserId = table.Column<string>(type: "varchar(255)", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_UserConversations", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_UserConversations_AspNetUsers_UserId",
-                        column: x => x.UserId,
-                        principalTable: "AspNetUsers",
-                        principalColumn: "Id");
-                    table.ForeignKey(
-                        name: "FK_UserConversations_Conversations_ConversationId",
                         column: x => x.ConversationId,
                         principalTable: "Conversations",
                         principalColumn: "Id",
@@ -290,7 +256,8 @@ namespace FullStackAuth_WebAPI.Migrations
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false),
-                    Url = table.Column<string>(type: "longtext", nullable: true)
+                    Url = table.Column<string>(type: "longtext", nullable: true),
+                    ProductID = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -309,8 +276,8 @@ namespace FullStackAuth_WebAPI.Migrations
                 columns: new[] { "Id", "ConcurrencyStamp", "Name", "NormalizedName" },
                 values: new object[,]
                 {
-                    { "be0ada50-4da1-483d-84b1-7edd9392e0d9", null, "User", "USER" },
-                    { "bfda347f-fd57-4dac-bfde-e4f8f9120b92", null, "Admin", "ADMIN" }
+                    { "03f8fd79-ac26-4c49-bc1a-96220c27e5a9", null, "User", "USER" },
+                    { "0f00ff0b-689f-4452-95b4-f12994ee8a36", null, "Admin", "ADMIN" }
                 });
 
             migrationBuilder.CreateIndex(
@@ -356,23 +323,8 @@ namespace FullStackAuth_WebAPI.Migrations
                 column: "ConversationId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Messages_SenderUserId",
-                table: "Messages",
-                column: "SenderUserId");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_Products_UserId",
                 table: "Products",
-                column: "UserId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_UserConversations_ConversationId",
-                table: "UserConversations",
-                column: "ConversationId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_UserConversations_UserId",
-                table: "UserConversations",
                 column: "UserId");
         }
 
@@ -402,9 +354,6 @@ namespace FullStackAuth_WebAPI.Migrations
 
             migrationBuilder.DropTable(
                 name: "Messages");
-
-            migrationBuilder.DropTable(
-                name: "UserConversations");
 
             migrationBuilder.DropTable(
                 name: "AspNetRoles");

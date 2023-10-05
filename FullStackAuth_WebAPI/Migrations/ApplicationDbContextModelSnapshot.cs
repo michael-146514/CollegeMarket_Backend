@@ -25,14 +25,14 @@ namespace FullStackAuth_WebAPI.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    b.Property<DateTime>("CreatedAt")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("datetime(6)");
-
                     b.Property<string>("Title")
-                        .IsRequired()
-                        .HasMaxLength(1000)
-                        .HasColumnType("varchar(1000)");
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("UserOne")
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("UserTwo")
+                        .HasColumnType("longtext");
 
                     b.HasKey("Id");
 
@@ -80,25 +80,18 @@ namespace FullStackAuth_WebAPI.Migrations
 
                     b.Property<string>("Content")
                         .IsRequired()
-                        .HasMaxLength(1000)
-                        .HasColumnType("varchar(1000)");
+                        .HasColumnType("longtext");
 
                     b.Property<int>("ConversationId")
                         .HasColumnType("int");
 
-                    b.Property<string>("SenderUserId")
+                    b.Property<string>("UserId")
                         .IsRequired()
-                        .HasColumnType("varchar(255)");
-
-                    b.Property<DateTime>("Timestamp")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("datetime(6)");
+                        .HasColumnType("longtext");
 
                     b.HasKey("Id");
 
                     b.HasIndex("ConversationId");
-
-                    b.HasIndex("SenderUserId");
 
                     b.ToTable("Messages");
                 });
@@ -217,27 +210,6 @@ namespace FullStackAuth_WebAPI.Migrations
                     b.ToTable("AspNetUsers", (string)null);
                 });
 
-            modelBuilder.Entity("FullStackAuth_WebAPI.Models.UserConversation", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    b.Property<int>("ConversationId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("UserId")
-                        .HasColumnType("varchar(255)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("ConversationId");
-
-                    b.HasIndex("UserId");
-
-                    b.ToTable("UserConversations");
-                });
-
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
                 {
                     b.Property<string>("Id")
@@ -266,13 +238,13 @@ namespace FullStackAuth_WebAPI.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "93064994-4bab-42c5-a586-a0a99951e56d",
+                            Id = "03f8fd79-ac26-4c49-bc1a-96220c27e5a9",
                             Name = "User",
                             NormalizedName = "USER"
                         },
                         new
                         {
-                            Id = "99511521-7fdc-4061-a247-9adbbdffeeb5",
+                            Id = "0f00ff0b-689f-4452-95b4-f12994ee8a36",
                             Name = "Admin",
                             NormalizedName = "ADMIN"
                         });
@@ -397,15 +369,7 @@ namespace FullStackAuth_WebAPI.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("FullStackAuth_WebAPI.Models.User", "SenderUser")
-                        .WithMany()
-                        .HasForeignKey("SenderUserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.Navigation("Conversation");
-
-                    b.Navigation("SenderUser");
                 });
 
             modelBuilder.Entity("FullStackAuth_WebAPI.Models.Product", b =>
@@ -413,23 +377,6 @@ namespace FullStackAuth_WebAPI.Migrations
                     b.HasOne("FullStackAuth_WebAPI.Models.User", "User")
                         .WithMany()
                         .HasForeignKey("UserId");
-
-                    b.Navigation("User");
-                });
-
-            modelBuilder.Entity("FullStackAuth_WebAPI.Models.UserConversation", b =>
-                {
-                    b.HasOne("FullStackAuth_WebAPI.Models.Conversation", "Conversation")
-                        .WithMany("UserConversations")
-                        .HasForeignKey("ConversationId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("FullStackAuth_WebAPI.Models.User", "User")
-                        .WithMany()
-                        .HasForeignKey("UserId");
-
-                    b.Navigation("Conversation");
 
                     b.Navigation("User");
                 });
@@ -488,8 +435,6 @@ namespace FullStackAuth_WebAPI.Migrations
             modelBuilder.Entity("FullStackAuth_WebAPI.Models.Conversation", b =>
                 {
                     b.Navigation("Messages");
-
-                    b.Navigation("UserConversations");
                 });
 
             modelBuilder.Entity("FullStackAuth_WebAPI.Models.Product", b =>
