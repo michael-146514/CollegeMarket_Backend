@@ -9,6 +9,8 @@ namespace FullStackAuth_WebAPI.Models
         [Key]
         public int Id { get; set; }
 
+        public string Username { get; set; }
+
         [Required]
         public string Content { get; set; }
 

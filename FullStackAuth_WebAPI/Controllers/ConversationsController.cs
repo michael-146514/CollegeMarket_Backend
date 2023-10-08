@@ -82,16 +82,19 @@ namespace FullStackAuth_WebAPI.Controllers
                     return NotFound("Conversation not found.");
                 }
 
+                
                 if (conversation.UserOne == userId || conversation.UserTwo == userId)
                 {
-                    return Unauthorized("You are not authorized to send messages in this conversation.");
-                }
 
                 var conversations = _context.Messages
                     .Where(m => m.ConversationId == conversationId)
                     .ToList();
 
                 return Ok(conversations);
+
+                    
+                }
+            return Unauthorized("You are not authorized to send messages in this conversation.");
             }
             catch (Exception ex)
             {
@@ -106,6 +109,7 @@ namespace FullStackAuth_WebAPI.Controllers
             try
             {
                 string userId = User.FindFirstValue("id");
+                string username = User.FindFirstValue("UserName");
                 // Check if the conversation exists
                 var conversation = _context.Conversations.FirstOrDefault(c => c.Id == conversationId);
                 if (conversation == null)
@@ -113,19 +117,16 @@ namespace FullStackAuth_WebAPI.Controllers
                     return NotFound("Conversation not found.");
                 }
 
-                
-                // Check if the user's userId is in the UserIds collection of the conversation
                 if (conversation.UserOne == userId || conversation.UserTwo == userId)
                 {
-                    return Unauthorized("You are not authorized to send messages in this conversation.");
-                }
-
-
+                    
+                    
                 // Create a new message
                 var newMessage = new Messages
                 {
                     Content = formData.Content,
-                    UserId = formData.UserId,
+                    Username = username,
+                    UserId = userId,
                     ConversationId = conversationId
                 };
 
@@ -134,12 +135,20 @@ namespace FullStackAuth_WebAPI.Controllers
                 _context.SaveChanges();
 
                 return Ok(newMessage);
+
+
+                }
+               
+            return Unauthorized("You are not authorized to send messages in this conversation.");
+
             }
             catch (Exception ex)
             {
                 return StatusCode(500, ex.Message);
             }
         }
+
+
 
 
         // DELETE: api/conversations/{id}
