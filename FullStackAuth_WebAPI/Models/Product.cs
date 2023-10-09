@@ -75,15 +75,4 @@ namespace FullStackAuth_WebAPI.Models
         public int ProductID { get; set; }
 
     }
-
-
-    public class SendInRequest
-    {
-        [Key]
-        public int Id { get; set; }
-        public string User1Id { get; set; }
-        public string User2Id { get; set; }
-
-        public char Status { get; set; }
-    }
 }
