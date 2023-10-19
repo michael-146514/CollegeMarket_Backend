@@ -11,8 +11,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace FullStackAuth_WebAPI.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20231007183939_UpdatedUserBoolAgain")]
-    partial class UpdatedUserBoolAgain
+    [Migration("20231010133259_RefreshDatabase")]
+    partial class RefreshDatabase
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -168,6 +168,9 @@ namespace FullStackAuth_WebAPI.Migrations
                     b.Property<string>("FirstName")
                         .HasColumnType("longtext");
 
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("tinyint(1)");
+
                     b.Property<bool>("IsAdmin")
                         .HasColumnType("tinyint(1)");
 
@@ -247,13 +250,13 @@ namespace FullStackAuth_WebAPI.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "3d9d1bed-6b06-479b-b0a3-cb8e80ee1e6b",
+                            Id = "f16c907a-5582-4d18-9cc3-310f858d13ed",
                             Name = "User",
                             NormalizedName = "USER"
                         },
                         new
                         {
-                            Id = "4d4f84c3-ef66-4c43-9b01-3c7f5f56b552",
+                            Id = "57bb029c-748b-4eda-824c-85d10cfa0e88",
                             Name = "Admin",
                             NormalizedName = "ADMIN"
                         });

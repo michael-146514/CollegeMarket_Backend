@@ -11,8 +11,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace FullStackAuth_WebAPI.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20231006200321_UpdatedUsernaem")]
-    partial class UpdatedUsernaem
+    [Migration("20231013211325_WatchList")]
+    partial class WatchList
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -168,6 +168,12 @@ namespace FullStackAuth_WebAPI.Migrations
                     b.Property<string>("FirstName")
                         .HasColumnType("longtext");
 
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("tinyint(1)");
+
+                    b.Property<bool>("IsAdmin")
+                        .HasColumnType("tinyint(1)");
+
                     b.Property<string>("LastName")
                         .HasColumnType("longtext");
 
@@ -216,6 +222,25 @@ namespace FullStackAuth_WebAPI.Migrations
                     b.ToTable("AspNetUsers", (string)null);
                 });
 
+            modelBuilder.Entity("FullStackAuth_WebAPI.Models.WatchList", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    b.Property<int>("productId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("userId")
+                        .HasColumnType("varchar(255)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("userId");
+
+                    b.ToTable("WatchList");
+                });
+
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
                 {
                     b.Property<string>("Id")
@@ -244,13 +269,13 @@ namespace FullStackAuth_WebAPI.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "9617381a-ccaf-4e9e-8c23-038d47bdaa5a",
+                            Id = "b7aedfdb-908e-4750-8cba-177a9ad00aa7",
                             Name = "User",
                             NormalizedName = "USER"
                         },
                         new
                         {
-                            Id = "b8324b52-3400-49de-9068-acfbec1235a2",
+                            Id = "98a3774a-b704-4213-a9f9-80fc52d9b547",
                             Name = "Admin",
                             NormalizedName = "ADMIN"
                         });
@@ -387,6 +412,13 @@ namespace FullStackAuth_WebAPI.Migrations
                     b.Navigation("User");
                 });
 
+            modelBuilder.Entity("FullStackAuth_WebAPI.Models.WatchList", b =>
+                {
+                    b.HasOne("FullStackAuth_WebAPI.Models.User", null)
+                        .WithMany("WatchList")
+                        .HasForeignKey("userId");
+                });
+
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
                 {
                     b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole", null)
@@ -446,6 +478,11 @@ namespace FullStackAuth_WebAPI.Migrations
             modelBuilder.Entity("FullStackAuth_WebAPI.Models.Product", b =>
                 {
                     b.Navigation("ImageUrls");
+                });
+
+            modelBuilder.Entity("FullStackAuth_WebAPI.Models.User", b =>
+                {
+                    b.Navigation("WatchList");
                 });
 #pragma warning restore 612, 618
         }

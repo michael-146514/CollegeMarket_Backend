@@ -9,7 +9,7 @@ using MySql.EntityFrameworkCore.Metadata;
 namespace FullStackAuth_WebAPI.Migrations
 {
     /// <inheritdoc />
-    public partial class initial : Migration
+    public partial class RefreshDatabase : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -39,6 +39,8 @@ namespace FullStackAuth_WebAPI.Migrations
                     Id = table.Column<string>(type: "varchar(255)", nullable: false),
                     FirstName = table.Column<string>(type: "longtext", nullable: true),
                     LastName = table.Column<string>(type: "longtext", nullable: true),
+                    IsAdmin = table.Column<bool>(type: "tinyint(1)", nullable: false),
+                    IsActive = table.Column<bool>(type: "tinyint(1)", nullable: false),
                     UserName = table.Column<string>(type: "varchar(256)", maxLength: 256, nullable: true),
                     NormalizedUserName = table.Column<string>(type: "varchar(256)", maxLength: 256, nullable: true),
                     Email = table.Column<string>(type: "varchar(256)", maxLength: 256, nullable: true),
@@ -235,6 +237,7 @@ namespace FullStackAuth_WebAPI.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("MySQL:ValueGenerationStrategy", MySQLValueGenerationStrategy.IdentityColumn),
+                    Username = table.Column<string>(type: "longtext", nullable: true),
                     Content = table.Column<string>(type: "longtext", nullable: false),
                     UserId = table.Column<string>(type: "longtext", nullable: false),
                     ConversationId = table.Column<int>(type: "int", nullable: false)
@@ -276,8 +279,8 @@ namespace FullStackAuth_WebAPI.Migrations
                 columns: new[] { "Id", "ConcurrencyStamp", "Name", "NormalizedName" },
                 values: new object[,]
                 {
-                    { "03f8fd79-ac26-4c49-bc1a-96220c27e5a9", null, "User", "USER" },
-                    { "0f00ff0b-689f-4452-95b4-f12994ee8a36", null, "Admin", "ADMIN" }
+                    { "57bb029c-748b-4eda-824c-85d10cfa0e88", null, "Admin", "ADMIN" },
+                    { "f16c907a-5582-4d18-9cc3-310f858d13ed", null, "User", "USER" }
                 });
 
             migrationBuilder.CreateIndex(

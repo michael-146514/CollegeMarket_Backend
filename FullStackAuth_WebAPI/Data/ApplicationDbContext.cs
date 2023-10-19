@@ -9,24 +9,16 @@ namespace FullStackAuth_WebAPI.Data
     {
 
         public DbSet<Product> Products { get; set; }
-
         public DbSet<Messages> Messages { get; set; }
-
         public DbSet<Conversation> Conversations { get; set; }
-
-        
-
+        public DbSet<WatchList> WatchList { get; set; }
         public DbSet<Image> Image { get; set; }
-
-
-
 
         public ApplicationDbContext(DbContextOptions options)
     : base(options)
         {
 
         }
-
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
@@ -37,11 +29,6 @@ namespace FullStackAuth_WebAPI.Data
                 .HasMany(p => p.ImageUrls)
                 .WithOne()
                 .HasForeignKey(i => i.Id);
-            
-
-
         }
-
-
     }
 }

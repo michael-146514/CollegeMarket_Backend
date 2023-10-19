@@ -1,3 +1,6 @@
+using DotNetEnv;
+using dotenv.net;
+
 using FullStackAuth_WebAPI.ActionFilters;
 using FullStackAuth_WebAPI.Contracts;
 using FullStackAuth_WebAPI.Extensions;
@@ -10,13 +13,22 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.FileProviders;
 using Microsoft.Extensions.Hosting;
 
+
 namespace FullStackAuth_WebAPI
 {
     public class Program
     {
+      
         public static void Main(string[] args)
         {
+
+            DotEnv.Load();
             var builder = WebApplication.CreateBuilder(args);
+
+            
+            IConfiguration configuration = new ConfigurationBuilder()
+            .AddEnvironmentVariables()
+            .Build();
 
             // Add services to the container.
             builder.Services.ConfigureCors();
@@ -44,7 +56,7 @@ namespace FullStackAuth_WebAPI
                 app.UseSwaggerUI();
             }
 
-
+           
             app.UseStaticFiles(new StaticFileOptions
             {
                 FileProvider = new PhysicalFileProvider(Path.Combine(env.ContentRootPath, "Images")),
@@ -67,5 +79,7 @@ namespace FullStackAuth_WebAPI
 
             app.Run();
         }
+
+       
     }
 }

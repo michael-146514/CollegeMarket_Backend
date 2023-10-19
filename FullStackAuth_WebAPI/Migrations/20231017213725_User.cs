@@ -7,7 +7,7 @@
 namespace FullStackAuth_WebAPI.Migrations
 {
     /// <inheritdoc />
-    public partial class UpdatedUser : Migration
+    public partial class User : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -15,27 +15,33 @@ namespace FullStackAuth_WebAPI.Migrations
             migrationBuilder.DeleteData(
                 table: "AspNetRoles",
                 keyColumn: "Id",
-                keyValue: "9617381a-ccaf-4e9e-8c23-038d47bdaa5a");
+                keyValue: "98a3774a-b704-4213-a9f9-80fc52d9b547");
 
             migrationBuilder.DeleteData(
                 table: "AspNetRoles",
                 keyColumn: "Id",
-                keyValue: "b8324b52-3400-49de-9068-acfbec1235a2");
+                keyValue: "b7aedfdb-908e-4750-8cba-177a9ad00aa7");
 
             migrationBuilder.AddColumn<bool>(
-                name: "IsAdmin",
+                name: "IsSeller",
                 table: "AspNetUsers",
                 type: "tinyint(1)",
                 nullable: false,
                 defaultValue: false);
+
+            migrationBuilder.AddColumn<string>(
+                name: "StripeId",
+                table: "AspNetUsers",
+                type: "longtext",
+                nullable: true);
 
             migrationBuilder.InsertData(
                 table: "AspNetRoles",
                 columns: new[] { "Id", "ConcurrencyStamp", "Name", "NormalizedName" },
                 values: new object[,]
                 {
-                    { "cf35cc51-b017-410b-ac54-b072023a05b0", null, "User", "USER" },
-                    { "e6aa49cb-63b9-47af-863f-4627ff805e0b", null, "Admin", "ADMIN" }
+                    { "38e49a13-9380-4070-a2ed-7b04aecfe00e", null, "Admin", "ADMIN" },
+                    { "7c29acf7-a237-418c-a24e-0d9cef7aad3c", null, "User", "USER" }
                 });
         }
 
@@ -45,15 +51,19 @@ namespace FullStackAuth_WebAPI.Migrations
             migrationBuilder.DeleteData(
                 table: "AspNetRoles",
                 keyColumn: "Id",
-                keyValue: "cf35cc51-b017-410b-ac54-b072023a05b0");
+                keyValue: "38e49a13-9380-4070-a2ed-7b04aecfe00e");
 
             migrationBuilder.DeleteData(
                 table: "AspNetRoles",
                 keyColumn: "Id",
-                keyValue: "e6aa49cb-63b9-47af-863f-4627ff805e0b");
+                keyValue: "7c29acf7-a237-418c-a24e-0d9cef7aad3c");
 
             migrationBuilder.DropColumn(
-                name: "IsAdmin",
+                name: "IsSeller",
+                table: "AspNetUsers");
+
+            migrationBuilder.DropColumn(
+                name: "StripeId",
                 table: "AspNetUsers");
 
             migrationBuilder.InsertData(
@@ -61,8 +71,8 @@ namespace FullStackAuth_WebAPI.Migrations
                 columns: new[] { "Id", "ConcurrencyStamp", "Name", "NormalizedName" },
                 values: new object[,]
                 {
-                    { "9617381a-ccaf-4e9e-8c23-038d47bdaa5a", null, "User", "USER" },
-                    { "b8324b52-3400-49de-9068-acfbec1235a2", null, "Admin", "ADMIN" }
+                    { "98a3774a-b704-4213-a9f9-80fc52d9b547", null, "Admin", "ADMIN" },
+                    { "b7aedfdb-908e-4750-8cba-177a9ad00aa7", null, "User", "USER" }
                 });
         }
     }

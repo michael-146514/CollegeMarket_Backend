@@ -11,8 +11,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace FullStackAuth_WebAPI.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20231007204527_UpdatedIsActive")]
-    partial class UpdatedIsActive
+    [Migration("20231017213725_User")]
+    partial class User
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -174,6 +174,9 @@ namespace FullStackAuth_WebAPI.Migrations
                     b.Property<bool>("IsAdmin")
                         .HasColumnType("tinyint(1)");
 
+                    b.Property<bool>("IsSeller")
+                        .HasColumnType("tinyint(1)");
+
                     b.Property<string>("LastName")
                         .HasColumnType("longtext");
 
@@ -203,6 +206,9 @@ namespace FullStackAuth_WebAPI.Migrations
                     b.Property<string>("SecurityStamp")
                         .HasColumnType("longtext");
 
+                    b.Property<string>("StripeId")
+                        .HasColumnType("longtext");
+
                     b.Property<bool>("TwoFactorEnabled")
                         .HasColumnType("tinyint(1)");
 
@@ -220,6 +226,25 @@ namespace FullStackAuth_WebAPI.Migrations
                         .HasDatabaseName("UserNameIndex");
 
                     b.ToTable("AspNetUsers", (string)null);
+                });
+
+            modelBuilder.Entity("FullStackAuth_WebAPI.Models.WatchList", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    b.Property<int>("productId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("userId")
+                        .HasColumnType("varchar(255)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("userId");
+
+                    b.ToTable("WatchList");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
@@ -250,13 +275,13 @@ namespace FullStackAuth_WebAPI.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "e780ddab-a070-4127-b4eb-ee2d13b7b6f0",
+                            Id = "7c29acf7-a237-418c-a24e-0d9cef7aad3c",
                             Name = "User",
                             NormalizedName = "USER"
                         },
                         new
                         {
-                            Id = "99ac03cb-41c7-4324-9a4a-af872ce57148",
+                            Id = "38e49a13-9380-4070-a2ed-7b04aecfe00e",
                             Name = "Admin",
                             NormalizedName = "ADMIN"
                         });
@@ -393,6 +418,13 @@ namespace FullStackAuth_WebAPI.Migrations
                     b.Navigation("User");
                 });
 
+            modelBuilder.Entity("FullStackAuth_WebAPI.Models.WatchList", b =>
+                {
+                    b.HasOne("FullStackAuth_WebAPI.Models.User", null)
+                        .WithMany("WatchList")
+                        .HasForeignKey("userId");
+                });
+
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
                 {
                     b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole", null)
@@ -452,6 +484,11 @@ namespace FullStackAuth_WebAPI.Migrations
             modelBuilder.Entity("FullStackAuth_WebAPI.Models.Product", b =>
                 {
                     b.Navigation("ImageUrls");
+                });
+
+            modelBuilder.Entity("FullStackAuth_WebAPI.Models.User", b =>
+                {
+                    b.Navigation("WatchList");
                 });
 #pragma warning restore 612, 618
         }
