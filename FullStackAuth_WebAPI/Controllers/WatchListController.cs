@@ -1,4 +1,5 @@
-﻿using FullStackAuth_WebAPI.Data;
+﻿using System.Security.Claims;
+using FullStackAuth_WebAPI.Data;
 using FullStackAuth_WebAPI.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -22,7 +23,7 @@ namespace FullStackAuth_WebAPI.Controllers
         
 
         // GET api/<WatchList>/5
-        [HttpGet("user/{userId}")]
+        [HttpGet("user/{userId}"), Authorize]
         public IActionResult GetUserWatchList(string userId)
         {
             
@@ -38,8 +39,25 @@ namespace FullStackAuth_WebAPI.Controllers
             return Ok(watchListItems);
         }
 
+        [HttpGet("{id}"), Authorize]
+        public IActionResult GetWatchListID(int id){
+            try{
+string userId = User.FindFirstValue("id");
+
+                var watchlistItem = _context.WatchList.Where(w => w.productId == id && w.userId == userId).ToList();
+
+                return Ok(watchlistItem);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, ex.Message);
+            }
+            
+                  
+        }
+
         // POST api/<WatchList>
-        [HttpPost]
+        [HttpPost, Authorize]
         public IActionResult Post([FromBody] WatchList watchList)
         {
             if (watchList == null)
@@ -55,7 +73,7 @@ namespace FullStackAuth_WebAPI.Controllers
         }
 
         // DELETE api/<WatchList>/5
-        [HttpDelete("{id}")]
+        [HttpDelete("{id}"), Authorize]
         public IActionResult Delete(int id)
         {
             var watchList = _context.WatchList.Find(id);
