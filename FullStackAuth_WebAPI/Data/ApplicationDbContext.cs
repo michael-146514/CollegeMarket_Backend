@@ -13,6 +13,8 @@ namespace FullStackAuth_WebAPI.Data
         public DbSet<Conversation> Conversations { get; set; }
         public DbSet<WatchList> WatchList { get; set; }
         public DbSet<Image> Image { get; set; }
+        
+
 
         public ApplicationDbContext(DbContextOptions options)
     : base(options)
