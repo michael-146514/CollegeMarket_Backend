@@ -27,7 +27,7 @@ namespace FullStackAuth_WebAPI.Controllers
             {
                 
                 var matchingProducts = _context.Products
-                .Where(p => (p.Title.Contains(query) || p.Description.Contains(query)) || p.Category.Contains(query) && p.Zipcode == zipcode && p.IsActive == true).Include(p => p.ImageUrls)
+                .Where(p => p.Title.Contains(query) || p.Description.Contains(query) || p.Category.Contains(query) && p.Zipcode == zipcode && p.IsActive == true).Include(p => p.ImageUrls)
                .ToList();
 
 

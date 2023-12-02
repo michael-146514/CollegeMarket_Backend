@@ -176,7 +176,7 @@ namespace FullStackAuth_WebAPI.Controllers
                 var userId = User.FindFirstValue("id");
 
 
-                if (userId == product.UserId || User.IsInRole("Admin"))
+                if (userId == product.UserId )
                 {
                 _context.Products.Remove(product);
                 _context.SaveChanges();
